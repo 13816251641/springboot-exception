@@ -97,7 +97,7 @@ public class BasicController {
             BindingResult bindingResult = ((MethodArgumentNotValidException)exception).getBindingResult();
             StringBuffer errorMsg = new StringBuffer();
             bindingResult.getFieldErrors().forEach((fieldError) -> {
-                errorMsg.append(fieldError.getDefaultMessage()).append("\n");
+                errorMsg.append(fieldError.getDefaultMessage()).append(";");
             });
             response.setMessage(errorMsg.toString());
             response.setErrorCode("10000");
