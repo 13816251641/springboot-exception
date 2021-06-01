@@ -38,7 +38,7 @@ import java.util.List;
 
  */
 public class Student {
-    @NotNull(message = "age不能为空")
+    @NotNull(message = "{age.isNull}")
     @Range(min = 1L,max = 130L,message = "age必须介于1-130之间")
     private Integer age;
 

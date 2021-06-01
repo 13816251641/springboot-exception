@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 public class HelloController extends BasicController {
 
     @PostMapping("/hello")
-    public Response hello(@NotNull @RequestBody Student student){
+    public Response hello(@RequestBody @Valid Student student){
         return returnSuccess(student);
     }
 

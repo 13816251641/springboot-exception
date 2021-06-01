@@ -5,11 +5,16 @@ import com.lujieni.exception.exception.BusinessException;
 import com.lujieni.exception.exception.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Locale;
 
 /**
  * @Package: com.lujieni.exception.controller
@@ -23,6 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class BasicController {
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
+     // 利用该对象实现资源文件的读取
+/*
+     @Autowired
+     private MessageSource messageSource;
+*/
 
     public BasicController() {
     }
@@ -96,7 +106,9 @@ public class BasicController {
             response.setHasBusinessException(true);
             BindingResult bindingResult = ((MethodArgumentNotValidException)exception).getBindingResult();
             StringBuffer errorMsg = new StringBuffer();
-            bindingResult.getFieldErrors().forEach((fieldError) -> {
+            bindingResult.getAllErrors().forEach((fieldError) -> {
+              //  String property = messageSource.getMessage("age.isNull",null, Locale.getDefault());
+                String errorCode = fieldError.getDefaultMessage();
                 errorMsg.append(fieldError.getDefaultMessage()).append(";");
             });
             response.setMessage(errorMsg.toString());
