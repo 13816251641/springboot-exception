@@ -1,5 +1,6 @@
 package com.lujieni.exception.controller;
 
+import com.lujieni.exception.entity.dto.ResponseDTO;
 import com.lujieni.exception.exception.AccessNotAllowException;
 import com.lujieni.exception.exception.BusinessException;
 import com.lujieni.exception.exception.Response;
@@ -29,34 +30,10 @@ public class BasicController {
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
      // 利用该对象实现资源文件的读取
-/*
      @Autowired
      private MessageSource messageSource;
-*/
 
-    public BasicController() {
-    }
-
-    public Response returnSuccess() {
-        return this.returnSuccess((String)null);
-    }
-
-    public Response returnSuccess(String successMsg) {
-        return this.returnSuccess((Object)null, successMsg);
-    }
-
-    public Response returnSuccess(Object object) {
-        return this.returnSuccess(object, (String)null);
-    }
-
-    public Response returnSuccess(Object object, String successMsg) {
-        Response response = new Response();
-        response.setSuccess(true);
-        response.setHasBusinessException(false);
-        response.setMessage(successMsg);
-        response.setResult(object);
-        return response;
-    }
+    public BasicController() {}
 
     /*
         给controller主动调用的
@@ -107,8 +84,9 @@ public class BasicController {
             BindingResult bindingResult = ((MethodArgumentNotValidException)exception).getBindingResult();
             StringBuffer errorMsg = new StringBuffer();
             bindingResult.getAllErrors().forEach((fieldError) -> {
-              //  String property = messageSource.getMessage("age.isNull",null, Locale.getDefault());
-                String errorCode = fieldError.getDefaultMessage();
+                String errorMessage = fieldError.getDefaultMessage();
+                String keyCode = getKeyCode(errorMessage);
+                String errorCode = messageSource.getMessage(keyCode, null, Locale.getDefault());
                 errorMsg.append(fieldError.getDefaultMessage()).append(";");
             });
             response.setMessage(errorMsg.toString());
@@ -121,6 +99,11 @@ public class BasicController {
         }
 
         return response;
+    }
+
+
+    private String getKeyCode(String resource){
+        return resource.substring(resource.indexOf("{")+1,resource.lastIndexOf("}"));
     }
 
 }
